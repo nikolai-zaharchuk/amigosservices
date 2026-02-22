@@ -7,6 +7,7 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
+
 public class Customer {
     private Long id;
     private String firstName;

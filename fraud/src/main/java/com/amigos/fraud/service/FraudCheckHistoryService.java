@@ -1,6 +1,7 @@
 package com.amigos.fraud.service;
 
 import com.amigos.fraud.dao.FraudCheckHistoryDao;
+import com.amigos.fraud.dto.response.FraudCheckResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,10 @@ public class FraudCheckHistoryService {
         this.fraudCheckHistoryDao = fraudCheckHistoryDao;
     }
 
-    public boolean isFraudsterCustomer(Long customerId) {
+    public FraudCheckResponse isFraudsterCustomer(Long customerId) {
         fraudCheckHistoryDao.create(customerId);
 
 
-        return false;
+        return new FraudCheckResponse(false);
     }
 }

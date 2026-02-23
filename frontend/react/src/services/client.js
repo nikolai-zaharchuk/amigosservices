@@ -11,3 +11,11 @@ export const getCustomers = async () => {
 export const customerProfilePictureUrl = (randomUserGender, customerId) => {
     return `https://randomuser.me/api/portraits/${randomUserGender}/${customerId}.jpg`
 }
+
+export const saveCustomer = async (customer) => {
+    try {
+        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/customers11`);
+    } catch (e) {
+        throw e;
+    }
+}

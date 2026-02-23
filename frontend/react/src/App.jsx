@@ -3,6 +3,7 @@ import SidebarWithHeader from "./components/shared/SideBar.jsx";
 import {getCustomers} from "./services/client.js";
 import {Spinner, Text, Wrap, WrapItem} from "@chakra-ui/react";
 import SocialProfileWithImage from "./components/Card.jsx";
+import CreateCustomerDrawer from "./components/CreateCustomerDrawer.jsx";
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
 
   return (
       <SidebarWithHeader>
+          <CreateCustomerDrawer/>
           <Wrap justifySelf={"center"} spacing={"30px"}>
               {customers.map((customer, index) => {
                   return (

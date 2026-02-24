@@ -10,16 +10,21 @@ function App() {
 
   const [customers, setCustomers] = useState([])
   const [loading, setLoading ] = useState(false)
+  const [error, setError ] = useState("")
+
+  const fetchCustomers = () => {
+      setLoading(true);
+      getCustomers().then(response => {
+          setCustomers(response.data);
+      }).catch(err => {
+          setError(err)
+      }).finally(() => {
+          setLoading(false);
+      });
+  }
 
   useEffect(() => {
-    setLoading(true);
-    getCustomers().then(response => {
-      setCustomers(response.data);
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false);
-    });
+      fetchCustomers();
   }, []);
 
   if (loading) {
@@ -36,22 +41,37 @@ function App() {
     )
   }
 
+  if (error) {
+      return (
+          <SidebarWithHeader>
+              <CreateCustomerDrawer
+                  fetchCustomers={fetchCustomers}
+              />
+              <Text mt={5}>
+                  Ooops there was an error
+              </Text>
+          </SidebarWithHeader>
+      );
+  }
+
   if (customers.length <= 0) {
     return (
         <SidebarWithHeader>
-          <Text>
-            No customers
-          </Text>
+            <CreateCustomerDrawer
+                fetchCustomers={fetchCustomers}
+            />
+            <Text mt={5}>
+                No customers
+            </Text>
         </SidebarWithHeader>
     );
   }
 
-  {console.log(customers)}
-  {console.log(customers.length)}
-
   return (
       <SidebarWithHeader>
-          <CreateCustomerDrawer/>
+          <CreateCustomerDrawer
+              fetchCustomers={fetchCustomers}
+          />
           <Wrap justifySelf={"center"} spacing={"30px"}>
               {customers.map((customer, index) => {
                   return (
@@ -59,6 +79,7 @@ function App() {
                           <SocialProfileWithImage
                               key={index}
                               {...customer}
+                              fetchCustomers={fetchCustomers}
                           />
                       </WrapItem>
                   )

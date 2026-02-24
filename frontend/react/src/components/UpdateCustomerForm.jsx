@@ -40,18 +40,12 @@ const MySelect = ({label, ...props}) => {
 };
 
 // And now we can use these
-const CreateCustomerForm = ({ onSuccess }) => {
+const UpdateCustomerForm = ({initialValues, customerId, onSuccess }) => {
     return (
         <>
             <Formik
-                initialValues={{
-                    firsName: '',
-                    lastName: '',
-                    email: '',
-                    age: 0,
-                    gender: '',
-                    password: ''
-                }}
+                initialValues={initialValues}
+
                 validationSchema={Yup.object({
                     firstName: Yup.string()
                         .max(15, 'Must be 15 characters or less')
@@ -66,10 +60,6 @@ const CreateCustomerForm = ({ onSuccess }) => {
                         .min(16, 'Must be at least 16 years of age')
                         .max(100, 'Must be less than 100 years of age')
                         .required(),
-                    password: Yup.string()
-                        .min(4, 'Must be 4 characters or more')
-                        .max(15, 'Must be 15 characters or less')
-                        .required('Required'),
                     gender: Yup.string()
                         .oneOf(
                             ['MALE', 'FEMALE'],
@@ -79,7 +69,7 @@ const CreateCustomerForm = ({ onSuccess }) => {
                 })}
                 onSubmit={(customer, {setSubmitting}) => {
                     setSubmitting(true);
-                    saveCustomer(customer)
+                    saveCustomer(customer, customerId)
                         .then(res => {
                             console.log(res);
                             // successNotification(
@@ -129,20 +119,13 @@ const CreateCustomerForm = ({ onSuccess }) => {
                                 placeholder="20"
                             />
 
-                            <MyTextInput
-                                label="Password"
-                                name="password"
-                                type="password"
-                                placeholder={"pick a secure password"}
-                            />
-
                             <MySelect label="Gender" name="gender">
                                 <option value="">Select gender</option>
                                 <option value="MALE">Male</option>
                                 <option value="FEMALE">Female</option>
                             </MySelect>
 
-                            <Button disabled={!isValid || isSubmitting} type="submit">Submit</Button>
+                            <Button disabled={!isValid || isSubmitting} type="submit">Update</Button>
                         </Stack>
                     </Form>
                 )}
@@ -151,4 +134,4 @@ const CreateCustomerForm = ({ onSuccess }) => {
     );
 };
 
-export default CreateCustomerForm;
+export default UpdateCustomerForm;

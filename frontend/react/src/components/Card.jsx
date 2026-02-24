@@ -17,11 +17,11 @@ import {
 
 import {useRef} from 'react'
 // import {customerProfilePictureUrl, deleteCustomer} from "../../services/client.js";
-import { customerProfilePictureUrl } from "../services/client.js";
+import { customerProfilePictureUrl, deleteCustomer } from "../services/client.js";
 // import {errorNotification, successNotification} from "../../services/notification.js";
-// import UpdateCustomerDrawer from "./UpdateCustomerDrawer.jsx";
+ import UpdateCustomerDrawer from "./UpdateCustomerDrawer.jsx";
 
-export default function CardWithImage({id, name, email, age, gender, imageNumber, fetchCustomers}) {
+export default function CardWithImage({id, firstName, lastName, email, age, gender, imageNumber, fetchCustomers}) {
     const randomUserGender = gender === "MALE" ? "men" : "women";
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -61,7 +61,7 @@ export default function CardWithImage({id, name, email, age, gender, imageNumber
                     <Stack spacing={2} align={'center'} mb={5}>
                         <Tag borderRadius={"full"}>{id}</Tag>
                         <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-                            {name}
+                            {firstName} {lastName}
                         </Heading>
                         <Text color={'gray.500'}>{email}</Text>
                         <Text color={'gray.500'}>Age {age} | {gender}</Text>
@@ -69,11 +69,11 @@ export default function CardWithImage({id, name, email, age, gender, imageNumber
                 </Box>
                 <Stack direction={'row'} justify={'center'} spacing={6} p={4}>
                     <Stack>
-                        {/*<UpdateCustomerDrawer*/}
-                        {/*    initialValues={{ name, email, age }}*/}
-                        {/*    customerId={id}*/}
-                        {/*    fetchCustomers={fetchCustomers}*/}
-                        {/*/>*/}
+                        <UpdateCustomerDrawer
+                            initialValues={{ firstName, lastName, email, age, gender }}
+                            customerId={id}
+                            fetchCustomers={fetchCustomers}
+                        />
                     </Stack>
                     <Stack>
                         <Button
@@ -111,23 +111,23 @@ export default function CardWithImage({id, name, email, age, gender, imageNumber
                                             Cancel
                                         </Button>
                                         <Button colorScheme='red' onClick={() => {
-                                            // deleteCustomer(id).then(res => {
-                                            //     console.log(res)
-                                            //     successNotification(
-                                            //         'Customer deleted',
-                                            //         `${name} was successfully deleted`
-                                            //     )
-                                            //     fetchCustomers();
-                                            //
-                                            // }).catch(err => {
-                                            //     console.log(err);
-                                            //     errorNotification(
-                                            //         err.code,
-                                            //         err.response.data.message
-                                            //     )
-                                            // }).finally(() => {
-                                            //     onClose()
-                                            // })
+                                            deleteCustomer(id).then(res => {
+                                                console.log(res)
+                                                // successNotification(
+                                                //     'Customer deleted',
+                                                //     `${name} was successfully deleted`
+                                                // )
+                                                fetchCustomers();
+
+                                            }).catch(err => {
+                                                console.log(err);
+                                                // errorNotification(
+                                                //     err.code,
+                                                //     err.response.data.message
+                                                // )
+                                            }).finally(() => {
+                                                onClose()
+                                            })
                                         }} ml={3}>
                                             Delete
                                         </Button>

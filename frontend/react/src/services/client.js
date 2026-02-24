@@ -14,7 +14,7 @@ export const customerProfilePictureUrl = (randomUserGender, customerId) => {
 
 export const saveCustomer = async (customer) => {
     try {
-        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/customers11`);
+        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/customers`, customer);
     } catch (e) {
         throw e;
     }

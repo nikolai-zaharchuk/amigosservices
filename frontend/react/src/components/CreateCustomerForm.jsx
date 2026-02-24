@@ -45,14 +45,18 @@ const CreateCustomerForm = ({ onSuccess }) => {
         <>
             <Formik
                 initialValues={{
-                    name: '',
+                    firsName: '',
+                    lastName: '',
                     email: '',
                     age: 0,
                     gender: '',
                     password: ''
                 }}
                 validationSchema={Yup.object({
-                    name: Yup.string()
+                    firstName: Yup.string()
+                        .max(15, 'Must be 15 characters or less')
+                        .required('Required'),
+                    lastName: Yup.string()
                         .max(15, 'Must be 15 characters or less')
                         .required('Required'),
                     email: Yup.string()
@@ -98,8 +102,15 @@ const CreateCustomerForm = ({ onSuccess }) => {
                     <Form>
                         <Stack spacing={"24px"}>
                             <MyTextInput
-                                label="Name"
-                                name="name"
+                                label="First Name"
+                                name="firstName"
+                                type="text"
+                                placeholder="Jane"
+                            />
+
+                            <MyTextInput
+                                label="Last Name"
+                                name="lastName"
                                 type="text"
                                 placeholder="Jane"
                             />

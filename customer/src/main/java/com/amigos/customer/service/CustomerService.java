@@ -2,6 +2,7 @@ package com.amigos.customer.service;
 
 import com.amigos.customer.dao.CustomerDao;
 import com.amigos.customer.dto.request.CustomerRegistrationRequest;
+import com.amigos.customer.dto.request.CustomerUpdateRequest;
 import com.amigos.customer.dto.response.CustomerResponse;
 import com.amigos.customer.dto.response.FraudCheckResponse;
 import com.amigos.customer.entity.Customer;
@@ -84,5 +85,9 @@ public class CustomerService {
 
     public void deleteCustomer(Long customerId) {
         customerDao.delete(customerId);
+    }
+
+    public void updateCustomer(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
+        customerDao.update(customerId, customerUpdateRequest);
     }
 }

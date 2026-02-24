@@ -1,6 +1,7 @@
 package com.amigos.customer.controller;
 
 import com.amigos.customer.dto.request.CustomerRegistrationRequest;
+import com.amigos.customer.dto.request.CustomerUpdateRequest;
 import com.amigos.customer.dto.response.CustomerResponse;
 import com.amigos.customer.entity.Customer;
 import com.amigos.customer.service.CustomerService;
@@ -43,5 +44,15 @@ public class CustomerController {
         log.info("Delete customer request {}", customerId);
 
         customerService.deleteCustomer(customerId);
+    }
+
+    @PutMapping("/{customerId}")
+    public void updateCustomer(
+            @PathVariable("customerId") Long customerId,
+            @RequestBody CustomerUpdateRequest customerUpdateRequest
+    ) {
+        log.info("Update customer request {} {}", customerId, customerUpdateRequest);
+
+        customerService.updateCustomer(customerId, customerUpdateRequest);
     }
 }

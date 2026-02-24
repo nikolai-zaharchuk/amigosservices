@@ -1,5 +1,6 @@
 package com.amigos.customer.dao;
 
+import com.amigos.customer.dto.request.CustomerUpdateRequest;
 import com.amigos.customer.entity.Customer;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface CustomerDao {
     List<Customer> getList();
     void truncate();
     void delete(Long customerId);
+    void update(Long customerId, CustomerUpdateRequest customerUpdateRequest);
 }

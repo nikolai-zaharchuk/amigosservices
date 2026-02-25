@@ -1,6 +1,6 @@
 package com.amigos.fraud.controller;
 
-import com.amigos.fraud.dto.response.FraudCheckResponse;
+import com.amigos.clients.fraud.dto.response.FraudCheckResponse;
 import com.amigos.fraud.service.FraudCheckHistoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

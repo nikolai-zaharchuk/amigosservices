@@ -1,10 +1,11 @@
 package com.amigos.customer.service;
 
+import com.amigos.clients.fraud.FraudClient;
+import com.amigos.clients.fraud.dto.response.FraudCheckResponse;
 import com.amigos.customer.dao.CustomerDao;
 import com.amigos.customer.dto.request.CustomerRegistrationRequest;
 import com.amigos.customer.dto.request.CustomerUpdateRequest;
 import com.amigos.customer.dto.response.CustomerResponse;
-import com.amigos.customer.dto.response.FraudCheckResponse;
 import com.amigos.customer.entity.Customer;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,13 +19,16 @@ import java.util.List;
 public class CustomerService {
     private final CustomerDao customerDao;
     private final RestTemplate restTemplate;
+    private final FraudClient fraudClient;
 
     public CustomerService(
             @Qualifier("jpa") CustomerDao customerDao,
-            RestTemplate restTemplate
+            RestTemplate restTemplate,
+            FraudClient fraudClient
     ) {
         this.customerDao = customerDao;
         this.restTemplate = restTemplate;
+        this.fraudClient = fraudClient;
     }
 
     public void register(CustomerRegistrationRequest customerRegistrationRequest) {
@@ -37,25 +41,15 @@ public class CustomerService {
 
         //check if email is valid
         //check is email not taking
-
         customerDao.insert(customer);
 
-        //send to fraud service
-        FraudCheckResponse fraudCheckResponse = restTemplate.getForObject(
-                "http://localhost:8085/api/fraud-check/{customerId}",
-                    FraudCheckResponse.class,
-                    customer.getId()
-
-        );
+        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId());
 
         if (fraudCheckResponse.isFraudster()) {
             throw new IllegalStateException("fraudster");
         }
 
         //send notification
-
-
-
     }
 
     public List<CustomerResponse> getCustomers() {

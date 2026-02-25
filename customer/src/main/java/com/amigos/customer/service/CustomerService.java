@@ -56,7 +56,11 @@ public class CustomerService {
         }
 
         //send notification
-        NotificationRequest notificationRequest = new NotificationRequest();
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .toCustomerEmail(customer.getEmail())
+                .toCustomerId(customer.getId())
+                .message("New customer has been registered int the our amazing service")
+                .build();
         NotificationResponse notificationResponse = notificationClient.sendNotification(notificationRequest);
     }
 

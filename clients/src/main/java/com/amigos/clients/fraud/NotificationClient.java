@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-    value = "fraud", url = "${clients.fraud.url}"
+        value = "notification", url = "${clients.notification.url}"
 )
-public interface FraudClient {
-    @GetMapping(path = "api/fraud-check/{customerId}")
-    FraudCheckResponse isFraudster(
-           @PathVariable("customerId") Long customerId
+public interface NotificationClient {
+    @PostMapping(path = "api/notification")
+    NotificationResponse sendNotification(
+            @RequestBody NotificationRequest notificationRequest
     );
 }

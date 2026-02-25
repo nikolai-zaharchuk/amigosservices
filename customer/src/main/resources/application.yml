@@ -22,3 +22,6 @@ spring:
 clients:
   fraud:
     url: http://localhost:8085
+  notification:
+    url: http://localhost:8090
+

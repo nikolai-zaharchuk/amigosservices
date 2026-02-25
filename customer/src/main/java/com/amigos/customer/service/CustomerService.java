@@ -1,7 +1,10 @@
 package com.amigos.customer.service;
 
 import com.amigos.clients.fraud.FraudClient;
+import com.amigos.clients.fraud.NotificationClient;
+import com.amigos.clients.fraud.dto.request.NotificationRequest;
 import com.amigos.clients.fraud.dto.response.FraudCheckResponse;
+import com.amigos.clients.fraud.dto.response.NotificationResponse;
 import com.amigos.customer.dao.CustomerDao;
 import com.amigos.customer.dto.request.CustomerRegistrationRequest;
 import com.amigos.customer.dto.request.CustomerUpdateRequest;
@@ -20,15 +23,18 @@ public class CustomerService {
     private final CustomerDao customerDao;
     private final RestTemplate restTemplate;
     private final FraudClient fraudClient;
+    private final NotificationClient notificationClient;
 
     public CustomerService(
             @Qualifier("jpa") CustomerDao customerDao,
             RestTemplate restTemplate,
-            FraudClient fraudClient
+            FraudClient fraudClient,
+            NotificationClient notificationClient
     ) {
         this.customerDao = customerDao;
         this.restTemplate = restTemplate;
         this.fraudClient = fraudClient;
+        this.notificationClient = notificationClient;
     }
 
     public void register(CustomerRegistrationRequest customerRegistrationRequest) {
@@ -50,6 +56,8 @@ public class CustomerService {
         }
 
         //send notification
+        NotificationRequest notificationRequest = new NotificationRequest();
+        NotificationResponse notificationResponse = notificationClient.sendNotification(notificationRequest);
     }
 
     public List<CustomerResponse> getCustomers() {

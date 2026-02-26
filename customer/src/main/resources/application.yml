@@ -7,17 +7,16 @@ spring:
   application:
     name: customer
   datasource:
+    url: jdbc:postgresql://localhost:5432/customers
     username: admin
     password: admin
-    url: jdbc:postgresql://localhost:5432/postgres
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+    show-sql: false
 
 clients:
   fraud:
@@ -25,3 +24,17 @@ clients:
   notification:
     url: http://localhost:8090
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318/v1/traces
+    metrics:
+      export:
+        enabled: false

@@ -1,59 +1,76 @@
+version: "3.8"
+
 services:
-  postgres_customers:
-    container_name: postgres_customers
-    image: postgres
+  postgres:
+    container_name: postgres
+    image: postgres:16
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      PG_DAT: admin
+      POSTGRES_DB: customers
     volumes:
-      - postgres_customers:/data/postgres_customers
+      - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - postgres_customers
     restart: unless-stopped
 
-  postgres_fraud:
-    container_name: postgres_fraud
-    image: postgres
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      PG_DAT: admin
-    volumes:
-      - postgres_fraud:/data/postgres_fraud
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: shopping_cart
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
     ports:
-      - "5332:5432"
-    networks:
-      - postgres_fraud
+      - "3306:3306"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    depends_on:
+      - prometheus
+      - tempo
+
+  tempo:
+    image: grafana/tempo:latest
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - "E:/JavaProject/amigosservices/tempo.yaml:/etc/tempo.yaml:ro"
+    ports:
+      - "3200:3200"     # только API для Grafana
     restart: unless-stopped
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_EMAIL:-pgadmin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector.yaml"]
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - "E:/JavaProject/amigosservices/otel-collector.yaml:/etc/otel-collector.yaml:ro"
     ports:
-      - "5050:80"
-    networks:
-      - postgres_customers
+      - "4317:4317"     # OTLP gRPC для локальных приложений
+      - "4318:4318"     # OTLP HTTP для локальных приложений
+    depends_on:
+      - tempo
     restart: unless-stopped
 
 networks:
-  postgres_customers:
+  postgres:
     driver: bridge
-  postgres_fraud:
+  mysql:
     driver: bridge
-
 
 volumes:
-  postgres_customers:
-  postgres_fraud:
-  pgadmin :
-
-
+  postgres:
+  mysql:

@@ -26,7 +26,15 @@ services:
     ports:
       - "3306:3306"
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:4.2.4-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   prometheus:
+    container_name: prometheus
     image: prom/prometheus
     ports:
       - "9090:9090"
@@ -34,6 +42,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
   grafana:
+    container_name: grafana
     image: grafana/grafana
     ports:
       - "3000:3000"
@@ -45,15 +54,38 @@ services:
       - tempo
 
   tempo:
-    image: grafana/tempo:latest
+    container_name: tempo
+    image: grafana/tempo:2.4.1   # лучше НЕ latest
     command: ["-config.file=/etc/tempo.yaml"]
     volumes:
       - "E:/JavaProject/amigosservices/tempo.yaml:/etc/tempo.yaml:ro"
     ports:
-      - "3200:3200"     # только API для Grafana
+      - "3200:3200"
     restart: unless-stopped
 
+  tempo-query:
+    container_name: tempo-query
+    image: grafana/tempo-query:2.4.1
+    environment:
+      - BACKEND=tempo:3200
+    ports:
+      - "16686:16686"
+    depends_on:
+      - tempo
+    restart: unless-stopped
+#    image: grafana/tempo-query:2.4.1
+#    command:
+#      - --grpc-storage-plugin.configuration-file=/etc/tempo-query.yaml
+#    volumes:
+#      - "E:/JavaProject/amigosservices/tempo-query.yaml:/etc/tempo-query.yaml:ro"
+#    ports:
+#      - "16686:16686"   # Jaeger UI
+#    depends_on:
+#      - tempo
+#    restart: unless-stopped
+
   otel-collector:
+    container_name: otel-collector
     image: otel/opentelemetry-collector-contrib:latest
     command: ["--config=/etc/otel-collector.yaml"]
     volumes:

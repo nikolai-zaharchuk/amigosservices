@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: apigw
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: customer
+              uri: http://localhost:8081
+#              uri: lb://CUSTOMER
+              predicates:
+                - Path=/api/customers/**
+
+server:
+  port: 8085
+

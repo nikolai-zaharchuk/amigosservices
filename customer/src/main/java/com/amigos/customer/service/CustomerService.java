@@ -1,5 +1,6 @@
 package com.amigos.customer.service;
 
+import com.amigos.amqp.config.RabbitMQMessageProducer;
 import com.amigos.clients.fraud.FraudClient;
 import com.amigos.clients.fraud.NotificationClient;
 import com.amigos.clients.fraud.dto.request.NotificationRequest;
@@ -24,17 +25,20 @@ public class CustomerService {
     private final RestTemplate restTemplate;
     private final FraudClient fraudClient;
     private final NotificationClient notificationClient;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
 
     public CustomerService(
             @Qualifier("jpa") CustomerDao customerDao,
             RestTemplate restTemplate,
             FraudClient fraudClient,
-            NotificationClient notificationClient
+            NotificationClient notificationClient,
+            RabbitMQMessageProducer rabbitMQMessageProducer
     ) {
         this.customerDao = customerDao;
         this.restTemplate = restTemplate;
         this.fraudClient = fraudClient;
         this.notificationClient = notificationClient;
+        this.rabbitMQMessageProducer = rabbitMQMessageProducer;
     }
 
     public void register(CustomerRegistrationRequest customerRegistrationRequest) {
@@ -61,7 +65,13 @@ public class CustomerService {
                 .toCustomerId(customer.getId())
                 .message("New customer has been registered int the our amazing service")
                 .build();
-        NotificationResponse notificationResponse = notificationClient.sendNotification(notificationRequest);
+       // NotificationResponse notificationResponse = notificationClient.sendNotification(notificationRequest);
+
+        rabbitMQMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 
     public List<CustomerResponse> getCustomers() {

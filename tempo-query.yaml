@@ -1,0 +1,6 @@
+backend: tempo
+
+tempo:
+  http_endpoint: http://tempo:3200
+  # на всякий случай, если плагину нужен gRPC (обычно не обязателен для UI, но пусть будет)
+  grpc_endpoint: tempo:9095

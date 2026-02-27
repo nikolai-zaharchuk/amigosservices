@@ -2,16 +2,14 @@ package com.amigos.customer.service;
 
 import com.amigos.amqp.config.RabbitMQMessageProducer;
 import com.amigos.clients.fraud.FraudClient;
-import com.amigos.clients.fraud.NotificationClient;
-import com.amigos.clients.fraud.dto.request.NotificationRequest;
+import com.amigos.clients.notification.NotificationClient;
 import com.amigos.clients.fraud.dto.response.FraudCheckResponse;
-import com.amigos.clients.fraud.dto.response.NotificationResponse;
+import com.amigos.clients.notification.dto.request.NotificationRequest;
 import com.amigos.customer.dao.CustomerDao;
 import com.amigos.customer.dto.request.CustomerRegistrationRequest;
 import com.amigos.customer.dto.request.CustomerUpdateRequest;
 import com.amigos.customer.dto.response.CustomerResponse;
 import com.amigos.customer.entity.Customer;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

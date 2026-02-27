@@ -19,17 +19,17 @@ public class NotificationApplication {
         SpringApplication.run(NotificationApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner(
-            RabbitMQMessageProducer producer,
-            NotificationConfig notificationConfig
-    ) {
-        return args -> {
-            producer.publish(
-                    "foo",
-                    "internal.exchange",
-                    "internal.notification.routing-key"
-            );
-        };
-    }
+//    @Bean
+//    CommandLineRunner commandLineRunner(
+//            RabbitMQMessageProducer producer,
+//            NotificationConfig notificationConfig
+//    ) {
+//        return args -> {
+//            producer.publish(
+//                    "foo",
+//                    "internal.exchange",
+//                    "internal.notification.routing-key"
+//            );
+//        };
+//    }
 }

@@ -1,4 +1,4 @@
-package com.amigos.clients.fraud.dto.request;
+package com.amigos.clients.notification.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

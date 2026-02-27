@@ -1,7 +1,7 @@
 package com.amigos.notification.service;
 
-import com.amigos.clients.fraud.dto.request.NotificationRequest;
-import com.amigos.clients.fraud.dto.response.NotificationResponse;
+import com.amigos.clients.notification.dto.request.NotificationRequest;
+import com.amigos.clients.notification.dto.response.NotificationResponse;
 import com.amigos.notification.dao.NotificationDao;
 import com.amigos.notification.entity.Notification;
 import lombok.AllArgsConstructor;

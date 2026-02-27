@@ -97,10 +97,35 @@ services:
       - tempo
     restart: unless-stopped
 
+#Для контейнеров проекта
+  apigw:
+    container_name: apigw
+    image: zaharchuk90/apigw:1.0-SNAPSHOT
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8085:8085"
+
+#  fraud:
+#    container_name: fraud
+#    image: zaharchuk90/fraud:1.0-SNAPSHOT
+#    networks:
+#      - spring
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    ports:
+#      - "8082:8082"
+
+
+
 networks:
   postgres:
     driver: bridge
   mysql:
+    driver: bridge
+  spring:
     driver: bridge
 
 volumes:

@@ -1,0 +1,43 @@
+server:
+  port: 8081
+cors:
+  allowed-origins: '*'
+  allowed-methods: '*'
+spring:
+  application:
+    name: customer
+  datasource:
+    url: jdbc:postgresql://postgres:5432/customers
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: false
+  rabbitmq:
+    addresses: rabbitmq:5672
+
+#clients:
+#  fraud:
+#    url: http://fraud:8082
+#  notification:
+#    url: http://notification:8083
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,metrics,prometheus
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#  otlp:
+#    tracing:
+#      endpoint: http://localhost:4318/v1/traces
+#    metrics:
+#      export:
+#        enabled: false
+

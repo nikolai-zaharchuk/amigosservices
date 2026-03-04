@@ -20,11 +20,11 @@ spring:
   rabbitmq:
     addresses: localhost:5672
 
-clients:
-  fraud:
-    url: http://localhost:8082
-  notification:
-    url: http://localhost:8083
+#clients:
+#  fraud:
+#    url: http://localhost:8082
+#  notification:
+#    url: http://localhost:8083
 
 management:
   endpoints:

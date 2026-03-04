@@ -1,0 +1,5 @@
+clients:
+  fraud:
+    url: http://fraud:8082
+  notification:
+    url: http://notification:8083

@@ -1,0 +1,35 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: fraud
+  datasource:
+    username: admin
+    password: admin
+    url: jdbc:postgresql://postgres:5432/fraud
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+
+
+
+#For tracing
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,metrics,prometheus
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#  otlp:
+#    tracing:
+#      endpoint: http://localhost:4318/v1/traces
+#    metrics:
+#      export:
+#        enabled: false

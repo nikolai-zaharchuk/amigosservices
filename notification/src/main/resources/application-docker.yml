@@ -1,0 +1,45 @@
+server:
+  port: 8083
+spring:
+  flyway:
+    enabled: true
+    schemas: customer
+  datasource:
+    username: admin
+    password: admin
+    url: jdbc:postgresql://postgres:5432/notification
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+  rabbitmq:
+    addresses: rabbitmq:5672
+
+rabbitmq:
+  exchanges:
+    internal: internal.exchange
+  queue:
+    notification: notification.queue
+  routing-keys:
+    internal-notification: internal.notification.routing-key
+
+
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,metrics,prometheus
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#  otlp:
+#    tracing:
+#      endpoint: http://localhost:4318/v1/traces
+#    metrics:
+#      export:
+#        enabled: false

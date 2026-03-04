@@ -8,6 +8,8 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: customers
+    networks:
+      - postgres
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -27,11 +29,14 @@ services:
       - "3306:3306"
 
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:4.2.4-management-alpine
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - spring
+      - rabbitmq
 
   prometheus:
     container_name: prometheus
@@ -103,29 +108,65 @@ services:
     image: zaharchuk90/apigw:1.0-SNAPSHOT
     networks:
       - spring
+      - customer
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8085:8085"
 
-#  fraud:
-#    container_name: fraud
-#    image: zaharchuk90/fraud:1.0-SNAPSHOT
-#    networks:
-#      - spring
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    ports:
-#      - "8082:8082"
+  fraud:
+    container_name: fraud
+    image: zaharchuk90/fraud:1.0-SNAPSHOT
+    networks:
+      - spring
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
 
+  customer:
+    container_name: customer
+    image: zaharchuk90/customer:1.0-SNAPSHOT
+    networks:
+      - spring
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - rabbitmq
 
+  notification:
+    container_name: notification
+    image: zaharchuk90/notification:1.0-SNAPSHOT
+    networks:
+      - spring
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+      - rabbitmq
 
 networks:
+  customer:
+    driver: bridge
   postgres:
     driver: bridge
   mysql:
     driver: bridge
   spring:
+    driver: bridge
+  rabbitmq:
     driver: bridge
 
 volumes:

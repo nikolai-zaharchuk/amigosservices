@@ -7,9 +7,7 @@ spring:
         webflux:
           routes:
             - id: customer
-              uri: http://localhost:8081
-
-#              uri: lb://CUSTOMER
+              uri: http://customer:8081
               predicates:
                 - Path=/api/customers/**
 

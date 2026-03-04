@@ -38,124 +38,124 @@ services:
       - spring
       - rabbitmq
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-
-  grafana:
-    container_name: grafana
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-    depends_on:
-      - prometheus
-      - tempo
-
-  tempo:
-    container_name: tempo
-    image: grafana/tempo:2.4.1   # лучше НЕ latest
-    command: ["-config.file=/etc/tempo.yaml"]
-    volumes:
-      - "E:/JavaProject/amigosservices/tempo.yaml:/etc/tempo.yaml:ro"
-    ports:
-      - "3200:3200"
-    restart: unless-stopped
-
-  tempo-query:
-    container_name: tempo-query
-    image: grafana/tempo-query:2.4.1
-    environment:
-      - BACKEND=tempo:3200
-    ports:
-      - "16686:16686"
-    depends_on:
-      - tempo
-    restart: unless-stopped
-#    image: grafana/tempo-query:2.4.1
-#    command:
-#      - --grpc-storage-plugin.configuration-file=/etc/tempo-query.yaml
-#    volumes:
-#      - "E:/JavaProject/amigosservices/tempo-query.yaml:/etc/tempo-query.yaml:ro"
+#  prometheus:
+#    container_name: prometheus
+#    image: prom/prometheus
 #    ports:
-#      - "16686:16686"   # Jaeger UI
+#      - "9090:9090"
+#    volumes:
+#      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#
+#  grafana:
+#    container_name: grafana
+#    image: grafana/grafana
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      GF_SECURITY_ADMIN_USER: admin
+#      GF_SECURITY_ADMIN_PASSWORD: admin
+#    depends_on:
+#      - prometheus
+#      - tempo
+#
+#  tempo:
+#    container_name: tempo
+#    image: grafana/tempo:2.4.1   # лучше НЕ latest
+#    command: ["-config.file=/etc/tempo.yaml"]
+#    volumes:
+#      - "E:/JavaProject/amigosservices/tempo.yaml:/etc/tempo.yaml:ro"
+#    ports:
+#      - "3200:3200"
+#    restart: unless-stopped
+#
+#  tempo-query:
+#    container_name: tempo-query
+#    image: grafana/tempo-query:2.4.1
+#    environment:
+#      - BACKEND=tempo:3200
+#    ports:
+#      - "16686:16686"
+#    depends_on:
+#      - tempo
+#    restart: unless-stopped
+##    image: grafana/tempo-query:2.4.1
+##    command:
+##      - --grpc-storage-plugin.configuration-file=/etc/tempo-query.yaml
+##    volumes:
+##      - "E:/JavaProject/amigosservices/tempo-query.yaml:/etc/tempo-query.yaml:ro"
+##    ports:
+##      - "16686:16686"   # Jaeger UI
+##    depends_on:
+##      - tempo
+##    restart: unless-stopped
+#
+#  otel-collector:
+#    container_name: otel-collector
+#    image: otel/opentelemetry-collector-contrib:latest
+#    command: ["--config=/etc/otel-collector.yaml"]
+#    volumes:
+#      - "E:/JavaProject/amigosservices/otel-collector.yaml:/etc/otel-collector.yaml:ro"
+#    ports:
+#      - "4317:4317"     # OTLP gRPC для локальных приложений
+#      - "4318:4318"     # OTLP HTTP для локальных приложений
 #    depends_on:
 #      - tempo
 #    restart: unless-stopped
 
-  otel-collector:
-    container_name: otel-collector
-    image: otel/opentelemetry-collector-contrib:latest
-    command: ["--config=/etc/otel-collector.yaml"]
-    volumes:
-      - "E:/JavaProject/amigosservices/otel-collector.yaml:/etc/otel-collector.yaml:ro"
-    ports:
-      - "4317:4317"     # OTLP gRPC для локальных приложений
-      - "4318:4318"     # OTLP HTTP для локальных приложений
-    depends_on:
-      - tempo
-    restart: unless-stopped
-
 #Для контейнеров проекта
-  apigw:
-    container_name: apigw
-    image: zaharchuk90/apigw:1.0-SNAPSHOT
-    networks:
-      - spring
-      - customer
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8085:8085"
+#  apigw:
+#    container_name: apigw
+#    image: zaharchuk90/apigw:1.0-SNAPSHOT
+#    networks:
+#      - spring
+#      - customer
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    ports:
+#      - "8085:8085"
 
-  fraud:
-    container_name: fraud
-    image: zaharchuk90/fraud:1.0-SNAPSHOT
-    networks:
-      - spring
-      - postgres
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8082:8082"
-    depends_on:
-      - postgres
-
-  customer:
-    container_name: customer
-    image: zaharchuk90/customer:1.0-SNAPSHOT
-    networks:
-      - spring
-      - postgres
-      - rabbitmq
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8081:8081"
-    depends_on:
-      - postgres
-      - rabbitmq
-
-  notification:
-    container_name: notification
-    image: zaharchuk90/notification:1.0-SNAPSHOT
-    networks:
-      - spring
-      - postgres
-      - rabbitmq
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8083:8083"
-    depends_on:
-      - postgres
-      - rabbitmq
+#  fraud:
+#    container_name: fraud
+#    image: zaharchuk90/fraud:1.0-SNAPSHOT
+#    networks:
+#      - spring
+#      - postgres
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - postgres
+#
+#  customer:
+#    container_name: customer
+#    image: zaharchuk90/customer:1.0-SNAPSHOT
+#    networks:
+#      - spring
+#      - postgres
+#      - rabbitmq
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - postgres
+#      - rabbitmq
+#
+#  notification:
+#    container_name: notification
+#    image: zaharchuk90/notification:1.0-SNAPSHOT
+#    networks:
+#      - spring
+#      - postgres
+#      - rabbitmq
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    ports:
+#      - "8083:8083"
+#    depends_on:
+#      - postgres
+#      - rabbitmq
 
 networks:
   customer:

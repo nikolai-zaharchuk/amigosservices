@@ -1,34 +1,24 @@
 server:
-  port: 8083
+  port: 8082
 spring:
-  flyway:
-    enabled: true
-    schemas: customer
+  application:
+    name: fraud
   datasource:
     username: admin
     password: admin
-    url: jdbc:postgresql://localhost:5432/notification
+    url: jdbc:postgresql://postgres:5432/fraud
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
-  rabbitmq:
-    addresses: localhost:5672
-
-rabbitmq:
-  exchanges:
-    internal: internal.exchange
-  queue:
-    notification: notification.queue
-  routing-keys:
-    internal-notification: internal.notification.routing-key
 
 
 
+#For tracing
 #management:
 #  endpoints:
 #    web:

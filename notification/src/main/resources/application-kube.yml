@@ -7,7 +7,7 @@ spring:
   datasource:
     username: admin
     password: admin
-    url: jdbc:postgresql://localhost:5432/notification
+    url: jdbc:postgresql://postgres:5432/notification
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -17,7 +17,7 @@ spring:
         format_sql: true
     show-sql: false
   rabbitmq:
-    addresses: localhost:5672
+    addresses: rabbitmq:5672
 
 rabbitmq:
   exchanges:

@@ -1,33 +1,30 @@
 server:
-  port: 8083
+  port: 8081
+cors:
+  allowed-origins: '*'
+  allowed-methods: '*'
 spring:
-  flyway:
-    enabled: true
-    schemas: customer
+  application:
+    name: customer
   datasource:
+    url: jdbc:postgresql://postgres:5432/customers
     username: admin
     password: admin
-    url: jdbc:postgresql://localhost:5432/notification
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
   rabbitmq:
-    addresses: localhost:5672
+    addresses: rabbitmq:5672
 
-rabbitmq:
-  exchanges:
-    internal: internal.exchange
-  queue:
-    notification: notification.queue
-  routing-keys:
-    internal-notification: internal.notification.routing-key
-
-
+#clients:
+#  fraud:
+#    url: http://fraud:8082
+#  notification:
+#    url: http://notification:8083
 
 #management:
 #  endpoints:
@@ -43,3 +40,4 @@ rabbitmq:
 #    metrics:
 #      export:
 #        enabled: false
+

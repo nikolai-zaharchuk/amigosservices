@@ -114,48 +114,57 @@ services:
 #    ports:
 #      - "8085:8085"
 
-#  fraud:
-#    container_name: fraud
-#    image: zaharchuk90/fraud:1.0-SNAPSHOT
-#    networks:
-#      - spring
-#      - postgres
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    ports:
-#      - "8082:8082"
-#    depends_on:
-#      - postgres
-#
-#  customer:
-#    container_name: customer
-#    image: zaharchuk90/customer:1.0-SNAPSHOT
-#    networks:
-#      - spring
-#      - postgres
-#      - rabbitmq
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#      - postgres
-#      - rabbitmq
-#
-#  notification:
-#    container_name: notification
-#    image: zaharchuk90/notification:1.0-SNAPSHOT
-#    networks:
-#      - spring
-#      - postgres
-#      - rabbitmq
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    ports:
-#      - "8083:8083"
-#    depends_on:
-#      - postgres
-#      - rabbitmq
+  fraud:
+    container_name: fraud
+    image: zaharchuk90/fraud:1.0-SNAPSHOT
+    networks:
+      - spring
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+
+  customer:
+    container_name: customer
+    image: zaharchuk90/customer:1.0-SNAPSHOT
+    networks:
+      - spring
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  notification:
+    container_name: notification
+    image: zaharchuk90/notification:1.0-SNAPSHOT
+    networks:
+      - spring
+      - postgres
+      - rabbitmq
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+
+  react:
+    container_name: react
+    image: zaharchuk90/amigosservices-react
+    ports:
+      - "3000:5173"
+
+
 
 networks:
   customer:

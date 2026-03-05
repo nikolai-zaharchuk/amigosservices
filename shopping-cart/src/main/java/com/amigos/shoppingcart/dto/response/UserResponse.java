@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 public class UserResponse {
-    @JsonIgnore
+    //@JsonIgnore
     private Long id;
     private String name;
     private String email;

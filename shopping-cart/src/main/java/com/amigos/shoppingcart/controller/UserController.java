@@ -1,18 +1,21 @@
 package com.amigos.shoppingcart.controller;
 
+import com.amigos.shoppingcart.dto.request.UserRegistrationRequest;
 import com.amigos.shoppingcart.dto.response.UserResponse;
 import com.amigos.shoppingcart.entity.User;
 import com.amigos.shoppingcart.mapper.UserMapper;
 import com.amigos.shoppingcart.repository.UserRepository;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -22,13 +25,15 @@ public class UserController {
 
     @GetMapping()
     public List<UserResponse> getUserList(
-            @RequestParam(name = "sort", required = false) String sort
+            @RequestHeader(name = "x-auth-token", required = false) String authToken,
+            @RequestParam(name = "sort", required = false, defaultValue = "sort") String sort
     ) {
+        System.out.println(authToken);
+
+
         if (!Set.of("name", "email").contains(sort)) {
             sort = "name";
         }
-
-        System.out.println(sort);
 
         List<User> users = userRepository.findAll(Sort.by(sort));
         List<UserResponse> userResponses = new ArrayList<>();
@@ -41,7 +46,6 @@ public class UserController {
                             .id(user.getId())
                     .build());
         });
-
 
         return userResponses;
     }
@@ -67,4 +71,35 @@ public class UserController {
 
         return ResponseEntity.ok(userResponse);
     }
+
+    @PostMapping
+    public ResponseEntity<?> createUser(
+            @Valid @RequestBody UserRegistrationRequest userRegistrationRequest,
+            UriComponentsBuilder uriComponentsBuilder
+    ) {
+
+        if (userRepository.existsUserByEmail(userRegistrationRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("email", "Email is already registered")
+            );
+        }
+
+        User user = User.builder()
+                .name(userRegistrationRequest.getName())
+                .email(userRegistrationRequest.getEmail())
+                .password(userRegistrationRequest.getPassword())
+                .build();
+
+        userRepository.saveAndFlush(user);
+
+        var uri = uriComponentsBuilder.path("/carts/{id}").buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(UserResponse.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .build());
+    }
+
+
 }

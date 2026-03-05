@@ -39,6 +39,8 @@ public class CustomerJPAAccessService implements CustomerDao {
     public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
         Customer customer = customerRepository.findById(customerId).orElse(null);
 
+        int a = 1;
+
         if (customer == null) {
             throw new CustomerNotFoundException("Customer with %s not found".formatted(customerId));
         }

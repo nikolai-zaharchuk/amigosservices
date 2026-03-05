@@ -42,27 +42,6 @@ public class User {
         address.setUser(null);
     }
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_tags",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    @Builder.Default
-    private Set<Tag> tags = new HashSet<>();
-
-    public void addTag(Tag tag) {
-        this.tags.add(tag);
-        tag.getUsers().add(this);
-    }
-
-    public void remove(String tagName) {
-        Tag tag = new Tag(tagName);
-
-        tags.add(tag);
-        tag.getUsers().add(this);
-    }
-
     @OneToOne(mappedBy = "user")
     private Profile profile;
 }

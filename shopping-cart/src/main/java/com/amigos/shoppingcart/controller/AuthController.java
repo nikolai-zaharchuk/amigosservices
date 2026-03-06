@@ -1,16 +1,16 @@
 package com.amigos.shoppingcart.controller;
 
+import com.amigos.shoppingcart.config.JwtConfig;
 import com.amigos.shoppingcart.dto.request.LoginRequest;
 import com.amigos.shoppingcart.dto.response.JwtResponse;
 import com.amigos.shoppingcart.dto.response.UserResponse;
 import com.amigos.shoppingcart.repository.UserRepository;
 import com.amigos.shoppingcart.service.JwtService;
-import io.jsonwebtoken.Jwts;
-import jakarta.servlet.annotation.HandlesTypes;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,10 +25,12 @@ public class AuthController {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
-            @Valid @RequestBody LoginRequest loginRequest
+            @Valid @RequestBody LoginRequest loginRequest,
+            HttpServletResponse response
     ) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -39,18 +41,23 @@ public class AuthController {
 
         var user = userRepository.findByEmail(loginRequest.getEmail()).orElse(null);
 
-        var token = jwtService.generateToken(user);
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        var cookie = new Cookie("refreshToken", refreshToken);
+        cookie.isHttpOnly();
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @PostMapping("/validate")
     public boolean validateToken(
             @RequestHeader("Authorization") String authHeader
     ) {
-        System.out.println("Validate called");
-
-
         var token = authHeader.replace("Bearer ", "");
 
         return jwtService.validateToken(token);

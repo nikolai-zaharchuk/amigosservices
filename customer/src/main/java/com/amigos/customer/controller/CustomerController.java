@@ -5,8 +5,11 @@ import com.amigos.customer.dto.request.CustomerUpdateRequest;
 import com.amigos.customer.dto.response.CustomerResponse;
 import com.amigos.customer.entity.Customer;
 import com.amigos.customer.service.CustomerService;
+import com.amigos.customer.service.JwtService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +20,19 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
+    private final JwtService jwtService;
 
     @PostMapping
-    public void registerCustomer(
+    public ResponseEntity<?> registerCustomer(
             @RequestBody CustomerRegistrationRequest customerRegistrationRequest
     ) {
         log.info("New customer registration request {}", customerRegistrationRequest);
+        Customer customer = customerService.register(customerRegistrationRequest);
+        var token = jwtService.generateToken(customer.getId().toString(), "ROLE_USER");
 
-        customerService.register(customerRegistrationRequest);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .build();
     }
 
     @GetMapping

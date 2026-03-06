@@ -39,7 +39,7 @@ public class CustomerService {
         this.rabbitMQMessageProducer = rabbitMQMessageProducer;
     }
 
-    public void register(CustomerRegistrationRequest customerRegistrationRequest) {
+    public Customer register(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer.builder()
                 .firstName(customerRegistrationRequest.getFirstName())
                 .lastName(customerRegistrationRequest.getLastName())
@@ -70,12 +70,13 @@ public class CustomerService {
                 "internal.exchange",
                 "internal.notification.routing-key"
         );
+
+        return customer;
     }
 
     public List<CustomerResponse> getCustomers() {
         List<Customer> customers = customerDao.getList();
         List<CustomerResponse> customerResponses = new ArrayList<>();
-
 
         String gender = Math.random() * 10 > 5 ? "MALE" : "FEMALE";
 

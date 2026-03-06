@@ -1,38 +1,45 @@
 package com.amigos.shoppingcart.service;
 
+import com.amigos.shoppingcart.config.JwtConfig;
 import com.amigos.shoppingcart.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class JwtService {
-    @Value("${jwt.secret}")
-    private String secret;
+    private final JwtConfig jwtConfig;
 
-    public String generateToken(User user) {
-        final long tokenExpiration = System.currentTimeMillis() + 1000 * 60 * 60 * 10;
+    public String generateAccessToken(User user) {
+        return generateAccessToken(user, jwtConfig.getAccessTokenExpiration());
+    }
 
+    public String generateRefreshToken(User user) {
+        return generateAccessToken(user, jwtConfig.getRefreshTokenExpiration());
+    }
+
+    private String generateAccessToken(User user, Integer tokenExpiration) {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claims(Map.of("email", user.getEmail(), "name", user.getName()))
                 .issuedAt(new Date())
-                .expiration(new Date(tokenExpiration))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
+                .signWith(jwtConfig.getSecretKey())
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             var claims = Jwts.parser()
-                    .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .verifyWith(jwtConfig.getSecretKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
@@ -50,9 +57,21 @@ public class JwtService {
         return claims.getSubject();
     }
 
+    public Long getUserIdFromToken(String token) {
+        return Long.valueOf(getClaims(token).getSubject());
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(jwtConfig.getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
     private Claims parseToken(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

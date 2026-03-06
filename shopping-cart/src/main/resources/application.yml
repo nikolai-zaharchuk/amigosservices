@@ -20,6 +20,11 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+  jwt:
+    secret: fCcaXeHLgdiGTMDJYBjFmiaUScqhMRQrPA2JXBIi2QUpDHh9cCz8ijKy25a1rqqYbKW7hrB67TGNbU2T25aE6lwhPUbjoLmaoZs3ynglag79EM6DVEoOgpDHuKIcKpgWynpr1JoIcb7ggu9hrBhHGemITCxSoz42qFR2o7Ir2pjQ6RxvPsYi4Z9Uank85nYtmtspuWxydjhKsny7Zmhp83RfBd21osFbuKoZjUmzxbgMlNv1ZIbt1WgHlkHGwRfc
+    accessTokenExpiration: 300
+    refreshTokenExpiration: 604800
+
 
 app:
   page:
@@ -27,8 +32,7 @@ app:
 server:
   port: 8084
 
-jwt:
-  secret: fCcaXeHLgdiGTMDJYBjFmiaUScqhMRQrPA2JXBIi2QUpDHh9cCz8ijKy25a1rqqYbKW7hrB67TGNbU2T25aE6lwhPUbjoLmaoZs3ynglag79EM6DVEoOgpDHuKIcKpgWynpr1JoIcb7ggu9hrBhHGemITCxSoz42qFR2o7Ir2pjQ6RxvPsYi4Z9Uank85nYtmtspuWxydjhKsny7Zmhp83RfBd21osFbuKoZjUmzxbgMlNv1ZIbt1WgHlkHGwRfc
+
   #secret: ${JWT_SECRET}
 
 

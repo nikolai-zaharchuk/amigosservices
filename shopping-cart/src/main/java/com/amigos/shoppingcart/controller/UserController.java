@@ -10,6 +10,7 @@ import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,6 +23,8 @@ import java.util.*;
 @AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @GetMapping()
     public List<UserResponse> getUserList(
@@ -87,7 +90,7 @@ public class UserController {
         User user = User.builder()
                 .name(userRegistrationRequest.getName())
                 .email(userRegistrationRequest.getEmail())
-                .password(userRegistrationRequest.getPassword())
+                .password(passwordEncoder.encode(userRegistrationRequest.getPassword()))
                 .build();
 
         userRepository.saveAndFlush(user);

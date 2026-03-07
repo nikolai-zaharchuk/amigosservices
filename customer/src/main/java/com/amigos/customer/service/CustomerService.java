@@ -45,6 +45,8 @@ public class CustomerService {
                 .lastName(customerRegistrationRequest.getLastName())
                 .email(customerRegistrationRequest.getEmail())
                 .password(customerRegistrationRequest.getPassword())
+                .age(customerRegistrationRequest.getAge())
+                .gender(customerRegistrationRequest.getGender())
                 .build();
 
         //check if email is valid

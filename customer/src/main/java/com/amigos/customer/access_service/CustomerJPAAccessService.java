@@ -39,8 +39,6 @@ public class CustomerJPAAccessService implements CustomerDao {
     public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
         Customer customer = customerRepository.findById(customerId).orElse(null);
 
-        int a = 1;
-
         if (customer == null) {
             throw new CustomerNotFoundException("Customer with %s not found".formatted(customerId));
         }
@@ -61,16 +59,6 @@ public class CustomerJPAAccessService implements CustomerDao {
             update = true;
             customer.setEmail(customerUpdateRequest.getEmail());
         }
-
-//        if (!customer.getFirstName().equals(customerUpdateRequest.getFirstName())) {
-//            update = true;
-//            customer.setFirstName(customerUpdateRequest.getFirstName());
-//        }
-//
-//        if (!customer.getFirstName().equals(customerUpdateRequest.getFirstName())) {
-//            update = true;
-//            customer.setFirstName(customerUpdateRequest.getFirstName());
-//        }
 
         if (update) {
             customerRepository.save(customer);
